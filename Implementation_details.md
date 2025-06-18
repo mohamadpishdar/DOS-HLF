@@ -156,9 +156,7 @@ To implement this attack, I first modified the orderer.yaml
 configuration files of the Hyperledger Fabric ordering service nodes.
 Specifically, I reduced the General: Cluster: SendBufferSize parameter
 for three Raft orderers from its default value to a significantly lower
-value for malicious nodes. This reduction
-
-aimed to prevent these orderers from processing transactions exceeding
+value for malicious nodes. This reduction aimed to prevent these orderers from processing transactions exceeding
 the new buffer capacity, effectively disrupting the consensus mechanism.
 Subsequently, using a client application built with the Hyperledger
 Fabric SDK, I generated transaction proposals with payloads exceeding
@@ -236,9 +234,7 @@ parameters effectively limit the maximum size of transaction batches the
 orderer could process. Additionally, I directly adjusted the General:
 Cluster: SendBufferSize within the orderer.yaml file to 10MB for the
 five orderer nodes. This aimed to induce memory pressure and constrain
-the ordering service's transaction processing capacity. I deployed
-
-client applications, leveraging the Hyperledger Fabric SDK for Java,
+the ordering service's transaction processing capacity. I deployed client applications, leveraging the Hyperledger Fabric SDK for Java,
 each configured to interact with the Fabric network. Two applications
 were associated with peers from Organization 1, and one with a peer from
 Organization 2, each authenticated with unique Fabric user certificates.
