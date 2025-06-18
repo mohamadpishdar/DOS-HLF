@@ -48,6 +48,7 @@ SubmitException, CommitStatusException, CommitException {
     }
 
 }
+```
 
 **Block** **discard** **attack**
 
@@ -123,6 +124,7 @@ private int generateRandomBinary(int authorizedOnes, int totalReps) {
         return 0;
     }
 }
+```
 
 **Bycott** **Attack**
 
@@ -174,6 +176,7 @@ transactions and the resulting failures of the undersized orderers
 disrupted the overall consensus process, causing delays and, ultimately,
 a failure of the ordering service to commit blocks.
 
+```java
 import java.util.Random;
 
 private void createAsset(String assetId, String color, String size, String owner, String appraisedValue, int maxPayloadSize, Contract contract)
@@ -221,6 +224,7 @@ private int generateRandomBinary(int authorizedOnes, int totalReps) {
         return 0;
     }
 }
+```
 
 **Malicious** **Client** **Attack**
 
@@ -249,6 +253,7 @@ ordering service. A significant increase in the application's runtime
 confirmed the successful DoS attack on the Hyperledger Fabric ordering
 service.
 
+```java
 import java.util.Random;
 
 private void createAsset(String assetId, String color, String size, String owner, String appraisedValue, int maxPayloadSize, Contract contract)
@@ -277,6 +282,7 @@ private String generateRandomString(int length) {
 
     return result.toString();
 }
+```
 
 **Raft** **Consensus** **Protocol** **attack**
 
@@ -303,6 +309,7 @@ increased transaction latency, indicated a successful disruption of the
 Raft consensus protocol. The application code has some changes in the
 createAsset function.
 
+```java
 private void createAsset(String assetId, String color, String size, String owner, String appraisedValue)
     throws EndorseException, SubmitException, CommitStatusException, CommitException {
     System.out.println("\n--> Submit Transaction: CreateAsset");
@@ -312,3 +319,4 @@ private void createAsset(String assetId, String color, String size, String owner
         System.out.println("*** Transaction committed successfully");
     }
 }
+```
