@@ -1,0 +1,15 @@
+﻿Batch timeout (seconds),Delay (seconds)
+0.2,1.38
+1,2.5
+5,5.9
+15,19.2
+30,43.5
+,
+,
+,
+Batch timeout (seconds),Throughput (Tx/Minute)
+0.2,43.2
+1,24
+5,9.6
+15,3
+30,1.32
